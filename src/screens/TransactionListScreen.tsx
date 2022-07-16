@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import { useDebounce } from 'use-debounce';
+import Colors from '../colors';
 import {
   SortBy,
   SortDirection,
@@ -20,14 +21,15 @@ import {
 } from '../useQueries';
 import humanize from '../utils';
 
-const gray = '#f5faf8';
-const orange = '#ec6540';
-const green = '#57b582';
-const black = '#000';
-const white = '#fff';
-const red = '#75140c';
+import type { RootStackParamList } from '../Router';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export default function TransactionListScreen() {
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  'TransactionListScreen'
+>;
+
+export default function TransactionListScreen({ navigation }: Props) {
   const [searchText, setSearchText] = useState('');
   const [currentSort, setCurrentSort] = useState<SortOption | undefined>();
   const [modalVisible, setModalVisible] = useState(false);
@@ -40,20 +42,23 @@ export default function TransactionListScreen() {
     let accentColor: string;
     switch (item.status) {
       case TransactionStatus.SUCCESS:
-        accentColor = green;
+        accentColor = Colors.green;
         break;
       case TransactionStatus.FAILED:
-        accentColor = red;
+        accentColor = Colors.red;
         break;
       default:
       case TransactionStatus.PENDING:
-        accentColor = orange;
+        accentColor = Colors.orange;
         break;
     }
     return (
-      <View
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('TransactionDetailScreen', { trx: item })
+        }
         style={{
-          backgroundColor: white,
+          backgroundColor: Colors.white,
           borderRadius: 6,
           flexDirection: 'row',
         }}>
@@ -101,7 +106,7 @@ export default function TransactionListScreen() {
                 &#x2B24;
                 {/* juga bisa pake unicode &#x25cf; */}
               </Text>
-              <Text>
+              <Text style={{ color: Colors.grayShades[500] }}>
                 &nbsp;
                 {humanize.date(item.completed_at)}
               </Text>
@@ -110,7 +115,7 @@ export default function TransactionListScreen() {
           {/* Right Capsule */}
           <CapsuleStatus status={item.status} />
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -120,7 +125,7 @@ export default function TransactionListScreen() {
         animationType="slide"
         visible={modalVisible}
         transparent
-        style={{ backgroundColor: orange }}
+        style={{ backgroundColor: Colors.orange }}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}>
@@ -134,7 +139,7 @@ export default function TransactionListScreen() {
             }}>
             <View
               style={{
-                backgroundColor: white,
+                backgroundColor: Colors.white,
                 paddingVertical: 30,
                 paddingHorizontal: 20,
                 borderRadius: 6,
@@ -206,18 +211,13 @@ export default function TransactionListScreen() {
                 }
                 label="Tanggal Terlama"
               />
-              {/* <TouchableOpacity
-                style={{ marginTop: 40 }}
-                onPress={() => setModalVisible(false)}>
-                <Text>Tutup</Text>
-              </TouchableOpacity> */}
             </View>
           </View>
         </SafeAreaView>
       </Modal>
       <FlatList
         contentContainerStyle={{ paddingHorizontal: 4 }}
-        style={{ backgroundColor: gray, flex: 1 }}
+        style={{ backgroundColor: Colors.gray, flex: 1 }}
         data={trxs.data ?? []}
         renderItem={renderItem}
         ListHeaderComponent={
@@ -251,7 +251,7 @@ function RadioButton({ selected, label, onPress }: RadioButtonProps) {
               width: 24,
               borderRadius: 12,
               borderWidth: 3,
-              borderColor: orange,
+              borderColor: Colors.orange,
               alignItems: 'center',
               justifyContent: 'center',
               marginRight: 12,
@@ -263,7 +263,7 @@ function RadioButton({ selected, label, onPress }: RadioButtonProps) {
                 height: 13,
                 width: 13,
                 borderRadius: 6,
-                backgroundColor: orange,
+                backgroundColor: Colors.orange,
               }}
             />
           ) : null}
@@ -284,10 +284,10 @@ function ListHeaderComponent({
   onSortClick,
 }: ListHeaderComponentProps) {
   return (
-    <View style={{ backgroundColor: gray, padding: 5 }}>
+    <View style={{ backgroundColor: Colors.gray, padding: 5 }}>
       <View
         style={{
-          backgroundColor: white,
+          backgroundColor: Colors.white,
           paddingHorizontal: 10,
           borderRadius: 5,
           marginBottom: 8,
@@ -296,13 +296,19 @@ function ListHeaderComponent({
           justifyContent: 'space-between',
         }}>
         <TextInput
-          style={{ backgroundColor: white, flex: 1, paddingVertical: 20 }}
+          style={{
+            backgroundColor: Colors.white,
+            flex: 1,
+            paddingVertical: 20,
+          }}
           onChangeText={onChangeText}
           placeholder="Cari nama, bank, atau nominal"
         />
         <TouchableOpacity onPress={onSortClick}>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ color: orange, fontWeight: '500' }}>URUTKAN </Text>
+            <Text style={{ color: Colors.orange, fontWeight: '500' }}>
+              URUTKAN{' '}
+            </Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -316,20 +322,20 @@ function CapsuleStatus({ status }: { status: TransactionStatus }) {
   let textColor: string;
   switch (status) {
     case TransactionStatus.SUCCESS:
-      accentColor = green;
+      accentColor = Colors.green;
       statusMessage = 'Berhasil';
-      textColor = white;
+      textColor = Colors.white;
       break;
     case TransactionStatus.FAILED:
-      accentColor = red;
+      accentColor = Colors.red;
       statusMessage = 'Gagal';
-      textColor = white;
+      textColor = Colors.white;
       break;
     default:
     case TransactionStatus.PENDING:
-      accentColor = orange;
+      accentColor = Colors.orange;
       statusMessage = 'Pengecekan';
-      textColor = black;
+      textColor = Colors.black;
       break;
   }
   if (status === TransactionStatus.PENDING) {

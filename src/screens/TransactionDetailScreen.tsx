@@ -1,43 +1,20 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  SafeAreaView,
-  // ActivityIndicator,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import Colors from '../colors';
-// import { useTransactionById } from '../useQueries';
 import humanize from '../utils';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-toast-message';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../Router';
 
-export default function TransactionDetailScreen() {
-  // const id = 'FT7089';
-  // const trxQuery = useTransactionById(id);
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  'TransactionDetailScreen'
+>;
 
-  const mockData = {
-    id: 'FT7089',
-    amount: 3972350,
-    unique_code: 292,
-    status: 'SUCCESS',
-    sender_bank: 'bni',
-    account_number: '9383972402',
-    beneficiary_name: 'Selin Dawe',
-    beneficiary_bank: 'bri',
-    remark: 'sample remark',
-    created_at: '2022-07-16 09:56:06'.split(' ').join('T'),
-    completed_at: '2022-07-16 09:56:06',
-    fee: 0,
-  };
+export default function TransactionDetailScreen({ navigation, route }: Props) {
+  const trx = route.params.trx;
 
-  // if (trxQuery.isLoading) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-  //       <ActivityIndicator size="large" />
-  //     </View>
-  //   );
-  // }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ backgroundColor: Colors.gray, flex: 1 }}>
@@ -50,14 +27,14 @@ export default function TransactionDetailScreen() {
               justifyContent: 'flex-start',
             }}>
             <Text style={{ fontWeight: '500', marginRight: 10 }}>
-              ID TRANSAKSI: #{mockData.id}
+              ID TRANSAKSI: #{trx.id}
             </Text>
             <TouchableOpacity
               onPress={() => {
-                Clipboard.setString(mockData.id);
+                Clipboard.setString(trx.id);
                 Toast.show({
                   type: 'success',
-                  text1: `Transaction ID (${mockData.id}) copied! ✅`,
+                  text1: `Transaction ID "${trx.id}" copied! ✅`,
                   position: 'bottom',
                 });
               }}>
@@ -82,7 +59,7 @@ export default function TransactionDetailScreen() {
               padding: 20,
             }}>
             <Text>DETAIL TRANSAKSI</Text>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <Text style={{ color: Colors.orange, fontWeight: '500' }}>
                 Tutup
               </Text>
@@ -100,8 +77,8 @@ export default function TransactionDetailScreen() {
 
           <View style={{ padding: 20 }}>
             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-              {humanize.bankName(mockData.sender_bank)} <Text>&#8594;</Text>{' '}
-              <Text>{humanize.bankName(mockData.beneficiary_bank)}</Text>
+              {humanize.bankName(trx.sender_bank)} <Text>&#8594;</Text>{' '}
+              <Text>{humanize.bankName(trx.beneficiary_bank)}</Text>
             </Text>
 
             {/* kotak-kotak grid */}
@@ -114,13 +91,13 @@ export default function TransactionDetailScreen() {
                 marginTop: 20,
               }}>
               <GridItem
-                label={mockData.beneficiary_name}
-                value={mockData.account_number}
+                label={trx.beneficiary_name}
+                value={trx.account_number}
                 flex={3}
               />
               <GridItem
                 label="NOMINAL"
-                value={humanize.currency(mockData.amount)}
+                value={humanize.currency(trx.amount)}
                 flex={2}
               />
             </View>
@@ -132,14 +109,10 @@ export default function TransactionDetailScreen() {
                 justifyContent: 'space-between',
                 marginTop: 20,
               }}>
-              <GridItem
-                label="BERITA TRANSFER"
-                value={mockData.remark}
-                flex={3}
-              />
+              <GridItem label="BERITA TRANSFER" value={trx.remark} flex={3} />
               <GridItem
                 label="KODE UNIK"
-                value={mockData.unique_code.toString()}
+                value={trx.unique_code.toString()}
                 flex={2}
               />
             </View>
@@ -148,7 +121,7 @@ export default function TransactionDetailScreen() {
             <View style={{ flexDirection: 'row', marginTop: 20 }}>
               <GridItem
                 label="WAKTU DIBUAT"
-                value={humanize.date(mockData.created_at)}
+                value={humanize.date(trx.created_at)}
               />
             </View>
           </View>

@@ -31,8 +31,8 @@ export interface Transaction {
   beneficiary_name: string;
   beneficiary_bank: string;
   remark: string;
-  created_at: Date;
-  completed_at: Date;
+  created_at: string;
+  completed_at: string;
   fee: number;
 }
 
@@ -65,8 +65,8 @@ function convertToTransaction(trx: TransactionResponse): Transaction {
     ...trx,
     status,
     // Fix the dates by replacing space with "T":
-    created_at: new Date(trx.created_at.split(' ').join('T')),
-    completed_at: new Date(trx.completed_at.split(' ').join('T')),
+    created_at: trx.created_at.split(' ').join('T'),
+    completed_at: trx.completed_at.split(' ').join('T'),
   };
 }
 
@@ -86,8 +86,6 @@ async function getTransactions({
     if (search) {
       const testMatch = search.toLowerCase();
       trxs = trxs.filter(trx => {
-        console.log('trx ben name? ', trx.beneficiary_name);
-        console.log('search? ', testMatch);
         if (trx.beneficiary_name.toLowerCase().includes(testMatch)) {
           return true;
         }
@@ -110,9 +108,15 @@ async function getTransactions({
       if (sort.by === SortBy.DATE) {
         trxs = trxs.sort((a, b) => {
           if (sort.direction === SortDirection.ASC) {
-            return a.completed_at.getTime() - b.completed_at.getTime();
+            return (
+              new Date(a.completed_at).getTime() -
+              new Date(b.completed_at).getTime()
+            );
           }
-          return b.completed_at.getTime() - a.completed_at.getTime();
+          return (
+            new Date(b.completed_at).getTime() -
+            new Date(a.completed_at).getTime()
+          );
         });
       } else {
         // sort.by === SortBy.NAME
@@ -124,10 +128,6 @@ async function getTransactions({
         });
       }
     }
-    console.log(
-      'trxs',
-      trxs.map(trx => trx.beneficiary_name),
-    );
 
     return trxs;
   } catch (e) {
@@ -136,15 +136,20 @@ async function getTransactions({
   }
 }
 
-function getTransactionById(id: string): Promise<Transaction> {
-  return fetch(`${BASE_URL}`)
-    .then(r => r.json() as Promise<ApiResponse>)
-    .then(r => convertToTransaction(r[id]))
-    .catch(e => {
-      console.log(e);
-      throw e;
-    });
-}
+// async function getTransactionById(id: string): Promise<Transaction> {
+//   try {
+//     const r = await fetch(`${BASE_URL}`);
+//     const r_1 = await (r.json() as Promise<ApiResponse>);
+//     console.log('ADA++? ', r_1);
+//     console.log('id? ', id);
+//     const rawTrx = r_1[id];
+//     console.log('ADA--? ', rawTrx);
+//     return convertToTransaction(rawTrx ?? {});
+//   } catch (e) {
+//     console.log(e);
+//     throw e;
+//   }
+// }
 
 export function useTransactions({
   search,
@@ -159,8 +164,8 @@ export function useTransactions({
   );
 }
 
-export function useTransactionById(id: string) {
-  return useQuery<Transaction, Error>(['transactions', 'detail', id], () =>
-    getTransactionById(id),
-  );
-}
+// export function useTransactionById(id: string) {
+//   return useQuery<Transaction, Error>(['transactions', 'detail', id], () =>
+//     getTransactionById(id),
+//   );
+// }
