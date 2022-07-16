@@ -1,18 +1,13 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import TransactionListScreen from './screens/TransactionListScreen';
+
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <View
-      style={{
-        backgroundColor: 'white',
-        flex: 1,
-        alignContent: 'center',
-        justifyContent: 'center',
-      }}>
-      <Text style={{ textAlign: 'center' }}>
-        Welcome to Flip React Native App
-      </Text>
-    </View>
+    <QueryClientProvider client={queryClient}>
+      <TransactionListScreen />
+    </QueryClientProvider>
   );
 }
