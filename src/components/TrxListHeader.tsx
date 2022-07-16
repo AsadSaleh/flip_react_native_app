@@ -24,6 +24,7 @@ export default function TrxListHeader({
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
+        <Text style={styles.magnifyingGlass}>&#x1F50D;</Text>
         <TextInput
           style={styles.textInput}
           onChangeText={onChangeText}
@@ -49,6 +50,7 @@ const styles = StyleSheet.create({
     top: -10,
     marginLeft: 4,
   },
+  magnifyingGlass: { marginRight: 6 },
   container: { backgroundColor: Colors.gray, padding: 5 },
   innerContainer: {
     backgroundColor: Colors.white,
