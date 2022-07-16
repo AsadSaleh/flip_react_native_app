@@ -58,6 +58,7 @@ export default function TransactionListScreen({ navigation }: Props) {
           <TrxListHeader
             onSortClick={() => setModalVisible(true)}
             onChangeText={v => setSearchText(v)}
+            currentSort={currentSort}
           />
         }
         ItemSeparatorComponent={() => <View style={styles.h8} />}

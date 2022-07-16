@@ -7,16 +7,20 @@ import {
   View,
 } from 'react-native';
 import Colors from '../colors';
+import { SortBy, SortDirection, SortOption } from '../useQueries';
 
 interface TrxListHeaderProps {
   onSortClick: () => void;
   onChangeText: (v: string) => void;
+  currentSort?: SortOption;
 }
 
 export default function TrxListHeader({
   onChangeText,
   onSortClick,
+  currentSort,
 }: TrxListHeaderProps) {
+  const text = fromSortOptionToText(currentSort);
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
@@ -28,8 +32,9 @@ export default function TrxListHeader({
         <TouchableOpacity onPress={onSortClick}>
           <View style={styles.directionRow}>
             <Text style={[styles.colorOrange, styles.fontWeight500]}>
-              URUTKAN{' '}
+              {text}
             </Text>
+            <Text style={styles.chevronDown}>&#8964;</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -38,6 +43,12 @@ export default function TrxListHeader({
 }
 
 const styles = StyleSheet.create({
+  chevronDown: {
+    color: Colors.orange,
+    fontSize: 30,
+    top: -10,
+    marginLeft: 4,
+  },
   container: { backgroundColor: Colors.gray, padding: 5 },
   innerContainer: {
     backgroundColor: Colors.white,
@@ -50,6 +61,8 @@ const styles = StyleSheet.create({
   },
   directionRow: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   colorOrange: {
     color: Colors.orange,
@@ -63,3 +76,33 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
 });
+
+function fromSortOptionToText(input?: SortOption): string {
+  let text = '';
+
+  if (input === undefined) {
+    text = 'URUTKAN';
+  } else if (
+    input.by === SortBy.NAME &&
+    input.direction === SortDirection.ASC
+  ) {
+    text = 'Nama A - Z';
+  } else if (
+    input.by === SortBy.NAME &&
+    input.direction === SortDirection.DESC
+  ) {
+    text = 'Nama Z - A';
+  } else if (
+    input.by === SortBy.DATE &&
+    input.direction === SortDirection.ASC
+  ) {
+    text = 'Tanggal Terbaru';
+  } else if (
+    input.by === SortBy.DATE &&
+    input.direction === SortDirection.DESC
+  ) {
+    text = 'Tanggal Terlama';
+  }
+
+  return text;
+}
