@@ -10,6 +10,7 @@ import Colors from '../colors';
 // import { useTransactionById } from '../useQueries';
 import humanize from '../utils';
 import Clipboard from '@react-native-clipboard/clipboard';
+import Toast from 'react-native-toast-message';
 
 export default function TransactionDetailScreen() {
   // const id = 'FT7089';
@@ -54,6 +55,11 @@ export default function TransactionDetailScreen() {
             <TouchableOpacity
               onPress={() => {
                 Clipboard.setString(mockData.id);
+                Toast.show({
+                  type: 'success',
+                  text1: `Transaction ID (${mockData.id}) copied! ✅`,
+                  position: 'bottom',
+                });
               }}>
               <CopyIcon />
             </TouchableOpacity>
