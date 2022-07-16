@@ -19,10 +19,14 @@ export default function Router() {
         <Stack.Screen
           name="TransactionListScreen"
           component={TransactionListScreen}
+          options={{
+            headerShown: false,
+          }}
         />
         <Stack.Screen
           name="TransactionDetailScreen"
           component={TransactionDetailScreen}
+          options={({ route }) => ({ title: route.params.trx.id })}
         />
       </Stack.Navigator>
     </NavigationContainer>
