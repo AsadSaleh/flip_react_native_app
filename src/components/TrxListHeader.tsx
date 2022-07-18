@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import Colors from '../colors';
-import { SortBy, SortDirection, SortOption } from '../useQueries';
+import { SortBy, SortDirection, SortOption } from '../api/useTransactions';
 
 interface TrxListHeaderProps {
   onSortClick: () => void;

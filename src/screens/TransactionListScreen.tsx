@@ -8,7 +8,11 @@ import {
 } from 'react-native';
 import { useDebounce } from 'use-debounce';
 import Colors from '../colors';
-import { SortOption, Transaction, useTransactions } from '../useQueries';
+import {
+  SortOption,
+  Transaction,
+  useTransactions,
+} from '../api/useTransactions';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import TransactionListItem from '../components/TransactionListItem';

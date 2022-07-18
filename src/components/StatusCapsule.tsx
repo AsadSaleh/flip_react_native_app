@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../colors';
-import { TransactionStatus } from '../useQueries';
+import { TransactionStatus } from '../api/useTransactions';
 
 export default function StatusCapsule({
   status,

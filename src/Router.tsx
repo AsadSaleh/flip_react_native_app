@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TransactionDetailScreen from './screens/TransactionDetailScreen';
 import TransactionListScreen from './screens/TransactionListScreen';
-import type { Transaction } from './useQueries';
+import type { Transaction } from './api/useTransactions';
 
 export type RootStackParamList = {
   TransactionListScreen: undefined;

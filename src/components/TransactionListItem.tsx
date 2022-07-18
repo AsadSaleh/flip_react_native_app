@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../colors';
-import { Transaction, TransactionStatus } from '../useQueries';
+import { Transaction, TransactionStatus } from '../api/useTransactions';
 import humanize from '../utils';
 import StatusCapsule from './StatusCapsule';
 
