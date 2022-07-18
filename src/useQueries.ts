@@ -136,6 +136,19 @@ async function getTransactions({
   }
 }
 
+export function useTransactions({
+  search,
+  sort,
+}: {
+  search?: string;
+  sort?: SortOption;
+}) {
+  return useQuery<Transaction[], Error>(
+    ['transaction', 'list', { search, sort }],
+    () => getTransactions({ search, sort }),
+  );
+}
+
 // async function getTransactionById(id: string): Promise<Transaction> {
 //   try {
 //     const r = await fetch(`${BASE_URL}`);
@@ -150,19 +163,6 @@ async function getTransactions({
 //     throw e;
 //   }
 // }
-
-export function useTransactions({
-  search,
-  sort,
-}: {
-  search?: string;
-  sort?: SortOption;
-}) {
-  return useQuery<Transaction[], Error>(
-    ['transaction', 'list', { search, sort }],
-    () => getTransactions({ search, sort }),
-  );
-}
 
 // export function useTransactionById(id: string) {
 //   return useQuery<Transaction, Error>(['transactions', 'detail', id], () =>

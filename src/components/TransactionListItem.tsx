@@ -27,12 +27,7 @@ export default function TransactionListItem({
       break;
   }
   return (
-    <TouchableOpacity
-      // onPress={() =>
-      //   navigation.navigate('TransactionDetailScreen', { trx: item })
-      // }
-      onPress={onPress}
-      style={styles.container}>
+    <TouchableOpacity onPress={onPress} style={styles.container}>
       {/* Left Border with Color */}
       <View
         style={[styles.leftBorderWithColor, { backgroundColor: accentColor }]}
