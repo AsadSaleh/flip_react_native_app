@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   ListRenderItem,
@@ -34,24 +34,18 @@ export default function TransactionListScreen({ navigation }: Props) {
 
   const trxs = useTransactions({ search: debSearchText, sort: currentSort });
 
-  const renderItem: ListRenderItem<Transaction> = useCallback(
-    ({ item }) => {
-      return (
-        <TransactionListItem
-          item={item}
-          onPress={() =>
-            navigation.navigate('TransactionDetailScreen', { trx: item })
-          }
-        />
-      );
-    },
-    [navigation],
-  );
+  const renderItem: ListRenderItem<Transaction> = ({ item }) => {
+    return (
+      <TransactionListItem
+        item={item}
+        onPress={() =>
+          navigation.navigate('TransactionDetailScreen', { trx: item })
+        }
+      />
+    );
+  };
 
-  const keyExtractor = useCallback<(trx: Transaction) => string>(
-    item => item.id,
-    [],
-  );
+  const keyExtractor = (item: Transaction) => item.id;
 
   return (
     <SafeAreaView style={styles.flex1}>
