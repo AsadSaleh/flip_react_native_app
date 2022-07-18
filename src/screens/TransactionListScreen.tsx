@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   FlatList,
   ListRenderItem,
@@ -30,16 +30,24 @@ export default function TransactionListScreen({ navigation }: Props) {
 
   const trxs = useTransactions({ search: debSearchText, sort: currentSort });
 
-  const renderItem: ListRenderItem<Transaction> = ({ item }) => {
-    return (
-      <TransactionListItem
-        item={item}
-        onPress={() =>
-          navigation.navigate('TransactionDetailScreen', { trx: item })
-        }
-      />
-    );
-  };
+  const renderItem: ListRenderItem<Transaction> = useCallback(
+    ({ item }) => {
+      return (
+        <TransactionListItem
+          item={item}
+          onPress={() =>
+            navigation.navigate('TransactionDetailScreen', { trx: item })
+          }
+        />
+      );
+    },
+    [navigation],
+  );
+
+  const keyExtractor = useCallback<(trx: Transaction) => string>(
+    item => item.id,
+    [],
+  );
 
   return (
     <SafeAreaView style={styles.flex1}>
@@ -50,10 +58,13 @@ export default function TransactionListScreen({ navigation }: Props) {
         currentSort={currentSort}
       />
       <FlatList
+        data={trxs.data ?? []}
+        refreshing={trxs.isRefetching}
+        onRefresh={trxs.refetch}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
         contentContainerStyle={styles.ph4}
         style={[styles.bgGrey, styles.flex1]}
-        data={trxs.data ?? []}
-        renderItem={renderItem}
         ListHeaderComponent={
           <TrxListHeader
             onSortClick={() => setModalVisible(true)}
