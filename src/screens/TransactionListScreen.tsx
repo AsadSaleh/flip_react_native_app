@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import { useDebounce } from 'use-debounce';
-import Colors from '../colors';
+import Colors from '../theme/colors';
 import {
   SortOption,
   Transaction,

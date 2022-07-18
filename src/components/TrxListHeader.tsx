@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Colors from '../colors';
+import Colors from '../theme/colors';
 import { SortBy, SortDirection, SortOption } from '../api/useTransactions';
 
 interface TrxListHeaderProps {
