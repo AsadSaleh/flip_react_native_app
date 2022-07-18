@@ -148,24 +148,3 @@ export function useTransactions({
     () => getTransactions({ search, sort }),
   );
 }
-
-// async function getTransactionById(id: string): Promise<Transaction> {
-//   try {
-//     const r = await fetch(`${BASE_URL}`);
-//     const r_1 = await (r.json() as Promise<ApiResponse>);
-//     console.log('ADA++? ', r_1);
-//     console.log('id? ', id);
-//     const rawTrx = r_1[id];
-//     console.log('ADA--? ', rawTrx);
-//     return convertToTransaction(rawTrx ?? {});
-//   } catch (e) {
-//     console.log(e);
-//     throw e;
-//   }
-// }
-
-// export function useTransactionById(id: string) {
-//   return useQuery<Transaction, Error>(['transactions', 'detail', id], () =>
-//     getTransactionById(id),
-//   );
-// }
