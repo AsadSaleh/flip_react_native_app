@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import Colors from '../colors';
-import humanize from '../utils';
+import humanize from '../utils/humanize';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-toast-message';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
