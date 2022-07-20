@@ -70,65 +70,11 @@ function convertToTransaction(trx: TransactionResponse): Transaction {
   };
 }
 
-async function getTransactions({
-  search,
-  sort,
-}: {
-  search?: string;
-  sort?: SortOption;
-}): Promise<Transaction[]> {
+async function getTransactions(): Promise<Transaction[]> {
   try {
     const r = await fetch(`${BASE_URL}`);
     const r_1 = await (r.json() as Promise<ApiResponse>);
     let trxs = Object.values(r_1).map(convertToTransaction) ?? [];
-
-    // Apply filter:
-    if (search) {
-      const testMatch = search.toLowerCase();
-      trxs = trxs.filter(trx => {
-        if (trx.beneficiary_name.toLowerCase().includes(testMatch)) {
-          return true;
-        }
-        if (trx.beneficiary_bank.toLowerCase().includes(testMatch)) {
-          return true;
-        }
-        if (trx.sender_bank.toLowerCase().includes(testMatch)) {
-          return true;
-        }
-        if (trx.amount.toString().includes(testMatch)) {
-          return true;
-        }
-        return false;
-      });
-    }
-
-    // Apply sort:
-    if (sort) {
-      trxs = [...trxs];
-      if (sort.by === SortBy.DATE) {
-        trxs = trxs.sort((a, b) => {
-          if (sort.direction === SortDirection.ASC) {
-            return (
-              new Date(a.completed_at).getTime() -
-              new Date(b.completed_at).getTime()
-            );
-          }
-          return (
-            new Date(b.completed_at).getTime() -
-            new Date(a.completed_at).getTime()
-          );
-        });
-      } else {
-        // sort.by === SortBy.NAME
-        trxs = trxs.sort((a_1, b_1) => {
-          if (sort.direction === SortDirection.ASC) {
-            return a_1.beneficiary_name.localeCompare(b_1.beneficiary_name);
-          }
-          return b_1.beneficiary_name.localeCompare(a_1.beneficiary_name);
-        });
-      }
-    }
-
     return trxs;
   } catch (e) {
     console.log(e);
@@ -144,7 +90,58 @@ export function useTransactions({
   sort?: SortOption;
 }) {
   return useQuery<Transaction[], Error>(
-    ['transaction', 'list', { search, sort }],
-    () => getTransactions({ search, sort }),
+    ['transaction', 'list'],
+    getTransactions,
+    {
+      select: (trxs: Transaction[]): Transaction[] => {
+        // Apply filter:
+        if (search) {
+          const testMatch = search.toLowerCase();
+          trxs = trxs.filter(trx => {
+            if (trx.beneficiary_name.toLowerCase().includes(testMatch)) {
+              return true;
+            }
+            if (trx.beneficiary_bank.toLowerCase().includes(testMatch)) {
+              return true;
+            }
+            if (trx.sender_bank.toLowerCase().includes(testMatch)) {
+              return true;
+            }
+            if (trx.amount.toString().includes(testMatch)) {
+              return true;
+            }
+            return false;
+          });
+        }
+
+        // Apply sort:
+        if (sort) {
+          trxs = [...trxs];
+          if (sort.by === SortBy.DATE) {
+            trxs = trxs.sort((a, b) => {
+              if (sort.direction === SortDirection.ASC) {
+                return (
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime()
+                );
+              }
+              return (
+                new Date(a.created_at).getTime() -
+                new Date(b.created_at).getTime()
+              );
+            });
+          } else {
+            // sort.by === SortBy.NAME
+            trxs = trxs.sort((a_1, b_1) => {
+              if (sort.direction === SortDirection.ASC) {
+                return a_1.beneficiary_name.localeCompare(b_1.beneficiary_name);
+              }
+              return b_1.beneficiary_name.localeCompare(a_1.beneficiary_name);
+            });
+          }
+        }
+        return trxs;
+      },
+    },
   );
 }
