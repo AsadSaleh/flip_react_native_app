@@ -51,7 +51,7 @@ export default function TransactionListItem({
             </Text>
             <Text style={{ color: Colors.grayShades[500] }}>
               &nbsp;
-              {humanize.date(item.completed_at)}
+              {humanize.date(item.created_at)}
             </Text>
           </View>
         </View>
